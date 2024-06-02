@@ -1,5 +1,14 @@
-from dotenv import load_dotenv;
-from os import getenv;
-load_dotenv();
+from pydantic_settings import BaseSettings;
+from pydantic import PostgresDsn;
 
-DB_URL = getenv("DB_URL");
+class Settings(BaseSettings):
+    app_version: str;
+    app_title: str;
+    pg_uri: PostgresDsn;
+    secret_key:str;
+    algorithm: str;
+    class Config:
+        env_file = ".env";
+        env_file_encoding = 'utf-8'
+
+settings = Settings();
