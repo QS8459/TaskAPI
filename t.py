@@ -19,10 +19,10 @@ def init_routers(_app: FastAPI):
 
 
 app = FastAPI(
-    title=settings.app_title,
-    description=settings.app_description,
-    version=settings.app_version,
-    lifespan=lifespan,
+    # title=settings.app_title,
+    # description=settings.app_description,
+    # version=settings.app_version,
+    # lifespan=lifespan,
 )
 app.include_router(router)
 init_dependencies(app)
