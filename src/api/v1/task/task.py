@@ -86,3 +86,7 @@ async def add_task(
             detail="BAD REQUEST",
         )
     return False;
+@router.get('home')
+async def home():
+    from starlette.responses import JSONResponse;
+    return JSONResponse("Hello world from task");
