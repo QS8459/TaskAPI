@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
+from typing import Annotated;
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Header;
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api import router
+from src.api import api_router
 from src.config import settings
-from src.dependencies import init_dependencies
+# from src.dependencies import init_dependencies
 
 
 @asynccontextmanager
@@ -15,7 +16,7 @@ async def lifespan(_app: FastAPI):
 
 
 def init_routers(_app: FastAPI):
-    app.include_router(router)
+    app.include_router(api_router)
 
 
 app = FastAPI(
@@ -24,13 +25,13 @@ app = FastAPI(
     # version=settings.app_version,
     # lifespan=lifespan,
 )
-app.include_router(router)
-init_dependencies(app)
+app.include_router(api_router)
+# init_dependencies(app)
 
 @app.get('/home')
-async def home():
+async def home(user_agent: Annotated[str |None, Header(convert_underscores=False)]= None) :
     from starlette.responses import JSONResponse
-    return JSONResponse("hello world");
+    return {"User-Agent": user_agent};
 
 origins = ["*"]
 
@@ -41,3 +42,4 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+

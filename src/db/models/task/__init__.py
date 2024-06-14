@@ -1,1 +1,2 @@
-from src.db.models.task.task import Task
+from src.db.models.task.task import Task;
+

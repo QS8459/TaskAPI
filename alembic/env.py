@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config;#ASYNC ENGINE FOR CO
 #IMPORTING ENVIRONMENT VARIABLES THAT WE CALL FROM SRC REPO
 from src.config import settings;
 #NEED TO IMPORT
-from src.db.db import AbstractModel as Base;
+from src.db.engine import AbsModel as Base;
 
 
 # this is the Alembic Config object, which provides
@@ -95,6 +95,8 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+
+
     #CHANGED TO ASYNC RUN IN ORDER TO RUN ASYNC
     asyncio.run(run_async_migrations())
 
