@@ -17,8 +17,6 @@ class AccountService(AbstractBaseService):
                 instance = self.model(**kwargs);
                 print(instance);
                 instance.set_password(password);
-                print("This is it's email",instance.email);
-                print("This is it's password", instance.password);
                 self.session.add(instance);
                 await self.session.commit();
                 await self.session.refresh(instance);
