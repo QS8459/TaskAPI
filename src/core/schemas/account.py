@@ -28,3 +28,7 @@ class AccountLoginSchema(AccountBaseSchema):
 class Token(BaseModel):
     token:str;
     type:str;
+
+class VerifyBody(BaseModel):
+    id:UUID;
+    code: int;

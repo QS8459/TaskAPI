@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 from typing import Annotated;
 
-from fastapi import FastAPI, Header;
+from fastapi import FastAPI, Header, Depends;
 from fastapi.middleware.cors import CORSMiddleware
-
+from src.core.service.account.auth import get_current_user;
 from src.api import api_router
 from src.config import settings
 # from src.dependencies import init_dependencies
@@ -28,10 +28,12 @@ app = FastAPI(
 app.include_router(api_router)
 # init_dependencies(app)
 
-@app.get('/home')
-async def home(user_agent: Annotated[str |None, Header(convert_underscores=False)]= None) :
+@app.get('/api/v1/home/',
+         status_code = 200)
+async def home(current_user = Depends(get_current_user)):
     from starlette.responses import JSONResponse
-    return {"User-Agent": user_agent};
+    return 0;
+
 
 origins = ["*"]
 

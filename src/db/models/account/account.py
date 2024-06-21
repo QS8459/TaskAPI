@@ -8,8 +8,8 @@ class Account(AbsModel):
     __tablename__ = "account";
     email: Mapped[str] = mapped_column(nullable = False, unique = True);
     password: Mapped[str] = mapped_column(nullable = False);
-    token: Mapped["Token"] = relationship(back_populates="account", lazy="selectin");
-    task: Mapped[List["Task"]] = relationship(back_populates="account", lazy="selectin");
+    task: Mapped[List["Task"]] = relationship(back_populates="account", lazy="joined");
+    ver_code: Mapped['Verification_Code'] = relationship(back_populates="account", lazy = "joined");
     def set_password(self, password):
         self.password = sha256.using().hash(password);
 

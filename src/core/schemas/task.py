@@ -1,0 +1,21 @@
+from pydantic import BaseModel;
+from pydantic.types import UUID;
+from src.db.models.task.task import Status
+
+class TaskBaseSchema(BaseModel):
+    title: str;
+    summary: str;
+    status: Status;
+
+
+class TaskCreateSchema(TaskBaseSchema):
+    pass;
+
+class TaskUpdateSchema(TaskBaseSchema):
+    pass;
+
+class TaskListSchema(TaskBaseSchema):
+    id:UUID;
+
+class TaskDetailSchema(TaskBaseSchema):
+    id:UUID;

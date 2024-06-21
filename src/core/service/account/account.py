@@ -1,12 +1,17 @@
-from src.core.service import AbstractBaseService;
-from sqlalchemy.ext.asyncio import AsyncSession;
 from fastapi import Depends;
-from sqlalchemy.exc import SQLAlchemyError;
-from src.db.engine import get_async_session
-from src.db.models import Account;
-from src.core.schemas.account import AccountLoginSchema;
+from pydantic.types import UUID;
+
 from sqlalchemy.future import select;
+from sqlalchemy.exc import SQLAlchemyError;
+from sqlalchemy.ext.asyncio import AsyncSession;
+
+from src.db.models import Account;
+from src.db.engine import get_async_session
+from src.core.service import AbstractBaseService;
+from src.core.schemas.account import AccountLoginSchema;
+
 class AccountService(AbstractBaseService):
+
     def __init__(self, session:AsyncSession):
         super().__init__(session, Account)
 
@@ -15,7 +20,6 @@ class AccountService(AbstractBaseService):
             async with self.session:
                 password = kwargs.pop("password")
                 instance = self.model(**kwargs);
-                print(instance);
                 instance.set_password(password);
                 self.session.add(instance);
                 await self.session.commit();
@@ -44,6 +48,16 @@ class AccountService(AbstractBaseService):
                     raise ValueError(f"{self.model.__name__} not found");
                 if not account.verify_password(credential.password):
                     raise ValueError(f"{self.model.__name__} Invalid Password")
+                return account;
+        except SQLAlchemyError as e:
+            raise e;
+
+    async def activate_user(self, id_:UUID):
+        try:
+            async with self.session:
+                account = await super().get_and_update(id_, is_active = True);
+                if not account:
+                    raise ValueError("Something went wrong in", account.__name__);
                 return account;
         except SQLAlchemyError as e:
             raise e;

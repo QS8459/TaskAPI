@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar;
+from typing import Generic, TypeVar, Type;
 from sqlalchemy.ext.asyncio import AsyncSession;
 from pydantic.types import UUID;
 from sqlalchemy.future import select;
@@ -8,7 +8,7 @@ from abc import ABC
 T = TypeVar("T")
 
 class AbstractBaseService(ABC,Generic[T]):
-    def __init__(self, session:AsyncSession, model:T):
+    def __init__(self, session:AsyncSession, model:Type[T]):
         self.session = session;
         self.model = model;
 
@@ -44,10 +44,10 @@ class AbstractBaseService(ABC,Generic[T]):
         except SQLAlchemyError as e:
             raise e
 
-    async def get_and_update(self, id_:UUID, **kwargs) -> T:
+    async def get_and_update(self, id_:UUID,**kwargs) -> T:
         try:
             async with self.session:
-                instance = self.get_by_id(kwargs.id_);
+                instance = await self.get_by_id(id_);
                 for k, v in kwargs.items():
                     setattr(instance, k, v);
                 self.session.add(instance);
