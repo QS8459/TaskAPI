@@ -1,9 +1,11 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column;
-from uuid import uuid4;
+import uuid;
 from datetime import datetime;
-from pydantic.types import UUID
+from pydantic.types import UUID4
+
+
 class AbsModel(DeclarativeBase):
-    id: Mapped[UUID] = mapped_column(primary_key=True, default = uuid4(), nullable = False);
+    id: Mapped[UUID4] = mapped_column(primary_key=True, default = uuid.uuid4, nullable = False);
     created_at: Mapped[datetime] = mapped_column(default = datetime.utcnow());
     updated_at: Mapped[datetime] = mapped_column(default = datetime.utcnow(), onupdate=datetime.utcnow());
     is_active: Mapped[bool] = mapped_column(default = False);

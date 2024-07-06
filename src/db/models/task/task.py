@@ -19,6 +19,7 @@ class Task(AbsModel):
     created_by: Mapped[UUID] = mapped_column(ForeignKey("account.id"));
     account: Mapped["Account"] = relationship(back_populates="task", lazy="joined");
     status: Mapped[str] = mapped_column(Enum(Status),default = Status.PENDING);
+    is_active: Mapped[bool] = mapped_column(default= True);
 
 __all__= (
     "Task",

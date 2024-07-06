@@ -5,29 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/api/v1/task/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/v1/task/task.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/schemas/task.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/account/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/task/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/task/task.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/v_code/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/v_code/v_code.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/verification_code/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/versions/2024_06_09_0252-4867c7ca8786_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/v1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/v1/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/account/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/schemas/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/n.py" beforeDir="false" afterPath="$PROJECT_DIR$/n.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/task/task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/account/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/task/task.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/db/models/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/account/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/models/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/db/models/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/task/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/token/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/token/token.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/t.py" beforeDir="false" afterPath="$PROJECT_DIR$/t.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

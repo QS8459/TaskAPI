@@ -3,8 +3,6 @@ from typing import Annotated
 from src.config import settings
 from datetime import datetime, timedelta;
 from src.core.schemas.account import Token, AccountDetail, AccountBaseSchema;
-from src.db.engine import get_async_session;
-from sqlalchemy.ext.asyncio import AsyncSession;
 from fastapi import Depends, status, HTTPException;
 from src.core.service.account.account import get_account_service;
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm;
@@ -45,5 +43,3 @@ async def get_current_active_user(
     if current_user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail = "Inactive User");
     return current_user;
-
-

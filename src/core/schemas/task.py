@@ -1,7 +1,7 @@
 from pydantic import BaseModel;
 from pydantic.types import UUID;
 from src.db.models.task.task import Status
-
+from src.core.schemas.account import AccountDetail;
 class TaskBaseSchema(BaseModel):
     title: str;
     summary: str;
@@ -16,6 +16,7 @@ class TaskUpdateSchema(TaskBaseSchema):
 
 class TaskListSchema(TaskBaseSchema):
     id:UUID;
+    account: AccountDetail;
 
 class TaskDetailSchema(TaskBaseSchema):
     id:UUID;
