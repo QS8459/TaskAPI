@@ -24,26 +24,33 @@ async def add_account(
     try:
         req = await account_service.add_account(**account_data.dict());
         if req:
-            await code_service.generate_code(req.email, req.id);
-        return req;
+            return req;
+        return HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "smth went wrong"
+        )
     except ValueError as e:
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"{e}",
         );
 
-@router.post('/verify_account/',
+@router.get('/verify_account/{user_id}/',
              response_model=AccountDetail,
              status_code = status.HTTP_200_OK)
 async def verify_account(
-        data:VerifyBody,
+        user_id: UUID,
         code_service = Depends(v_code_service),
         account_service = Depends(get_account_service)
 ):
     try:
-        activation = await code_service.verify_user(data.id, data.code);
+        activation = await account_service.activate_user(user_id);
         if activation:
-            return await account_service.activate_user(activation.get("user_id"))
+            return activation;
+        return HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "Not found!!!"
+        )
     except ValueError as e:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,

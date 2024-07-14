@@ -41,3 +41,19 @@ async def get_all_task(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"{e}"
         );
+@router.get('/{pk}/',
+            status_code= status.HTTP_200_OK,
+            response_model = TaskDetailSchema)
+async def get_a_task(
+        pk,
+        # current_user = Depends(get_current_user),
+        task_service = Depends(get_task_service),
+):
+    try:
+        task = await task_service.get_by_id(pk);
+        return task;
+    except ValueError as e:
+        raise HTTPException(
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"{e}"
+        )

@@ -7,6 +7,10 @@ class Settings(BaseSettings):
     token_expiration: int;
     secret_key: SecretStr;
     algorithm: str;
+    smtp_server: str;
+    smtp_port: int;
+    smtp_email: SecretStr;
+    smtp_pass: SecretStr;
 
     class Config:
         env_file = ".env",

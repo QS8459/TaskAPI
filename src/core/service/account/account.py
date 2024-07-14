@@ -5,6 +5,8 @@ from sqlalchemy.future import select;
 from sqlalchemy.exc import SQLAlchemyError;
 from sqlalchemy.ext.asyncio import AsyncSession;
 
+from src.ver_email import email_server, Email;
+
 from src.db.models import Account;
 from src.db.engine import get_async_session
 from src.core.service import AbstractBaseService;
@@ -24,6 +26,11 @@ class AccountService(AbstractBaseService):
                 self.session.add(instance);
                 await self.session.commit();
                 await self.session.refresh(instance);
+                email_server(Email(
+                    subject="Verify Your Email",
+                    body=f"http://127.0.0.1:8000/api/v1/account/verify_account/{instance.id}/",
+                    recipient=instance.email
+                ));
                 return instance;
         except SQLAlchemyError as e:
             raise e;
@@ -48,6 +55,8 @@ class AccountService(AbstractBaseService):
                     raise ValueError(f"{self.model.__name__} not found");
                 if not account.verify_password(credential.password):
                     raise ValueError(f"{self.model.__name__} Invalid Password")
+                if account.is_active == False:
+                    raise ValueError(f"{self.model.__name__} not found")
                 return account;
         except SQLAlchemyError as e:
             raise e;

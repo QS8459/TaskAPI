@@ -28,15 +28,13 @@ class VerificationService(AbstractBaseService):
                 return instance
         except SQLAlchemyError as e:
             raise e;
-    async def verify_user(self,user_id, v_code):
+    async def verify_user(self,user_id):
         try:
             async with self.session:
-                query = select(self.model).where(self.model.code_for == user_id);
-                result = await self.session.execute(query);
+                super().get_and_update(user_id, )
+                result = await self.session.execute();
                 instance = result.scalars().first();
                 if not instance:
-                    raise ValueError(f"{self.model.__name__} not found");
-                if not instance.verify_code(v_code) and not instance.active_till < (datetime.utcnow() - timedelta(minutes=2)):
                     raise ValueError(f"{self.model.__name__} not found");
                 return {"detail":"success", "status": 200, "user_id": instance.code_for};
         except SQLAlchemyError as e:

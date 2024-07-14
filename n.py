@@ -1,4 +1,4 @@
-from uuid import uuid4;
+from src.ver_email import Email, email_server;
 
 
-print(uuid4());
+email_server(Email(subject = "TestEmail",body = "Test email Body", recipient = "q.sardorbek8459@gmail.com"));

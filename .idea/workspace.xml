@@ -5,16 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/ver_email.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/n.py" beforeDir="false" afterPath="$PROJECT_DIR$/n.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/account/account.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/v1/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/task/task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/schemas/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/account/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/task/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/account/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/task/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/v_code/v_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/v_code/v_code.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +47,8 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/quick_fast&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/quick_fast&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
 }</component>
   <component name="RecentsManager">

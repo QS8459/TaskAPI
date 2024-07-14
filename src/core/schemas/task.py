@@ -16,7 +16,6 @@ class TaskUpdateSchema(TaskBaseSchema):
 
 class TaskListSchema(TaskBaseSchema):
     id:UUID;
-    account: AccountDetail;
 
 class TaskDetailSchema(TaskBaseSchema):
     id:UUID;
