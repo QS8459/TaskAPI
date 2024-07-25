@@ -31,7 +31,7 @@ class VerificationService(AbstractBaseService):
     async def verify_user(self,user_id):
         try:
             async with self.session:
-                super().get_and_update(user_id, )
+                super().get_and_update(user_id)
                 result = await self.session.execute();
                 instance = result.scalars().first();
                 if not instance:

@@ -1,10 +1,16 @@
-from typing import Generic, TypeVar, Type;
-from sqlalchemy.ext.asyncio import AsyncSession;
+from typing import Generic, TypeVar, Type, Tuple, Sequence, Any, Annotated;
 from pydantic.types import UUID;
-from sqlalchemy.future import select;
+
+from fastapi import Depends;
+
+from sqlalchemy.ext.asyncio import AsyncSession;
 from sqlalchemy import delete, Row, func, update;
 from sqlalchemy.exc import SQLAlchemyError;
+from sqlalchemy.future import select;
+
 from abc import ABC
+
+from src.pagination import pagination_param, Pagination;
 T = TypeVar("T")
 
 class AbstractBaseService(ABC,Generic[T]):
@@ -23,10 +29,20 @@ class AbstractBaseService(ABC,Generic[T]):
         except SQLAlchemyError as e:
             raise e;
 
-    async def get_all(self):
+    async def get_all(
+            self,
+            user,
+            pagination: Annotated[Pagination, Depends(pagination_param)]
+    ):
         try:
             async with self.session:
-                query = select(self.model);
+                query = (
+                    select(self.model).filter(self.model.created_by == user.id)
+                    .limit(pagination.perPage)
+                    .offset(pagination.page - 1
+                    if pagination.page == 1
+                    else(pagination.page - 1) * pagination.perPage )
+                )
                 result = await self.session.execute(query);
                 return result.scalars().all();
         except SQLAlchemyError as e:
@@ -76,3 +92,29 @@ class AbstractBaseService(ABC,Generic[T]):
                 await self.session.commit();
         except SQLAlchemyError as e:
             raise e;
+
+
+    async def get_all_paginated(
+            self,
+            page: int = 1,
+            page_size: int = 25,
+    )-> Tuple[int, Sequence[Row[Any]]]:
+        try:
+            async with self.session:
+                limit = page_size;
+                offset = (page-1) * page_size;
+                instance = await self.get_all();
+                count = await self.get_count();
+                return count, instance;
+        except SQLAlchemyError as e:
+            raise e;
+
+    async def get_count(self) -> int:
+        try:
+            async with self.session:
+                query = select(func.count()).select_from(self.model)
+                result = await self.session.execute(query);
+                count = result.scalar();
+                return count;
+        except SQLAlchemyError as e:
+            raise e

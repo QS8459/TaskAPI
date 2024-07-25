@@ -35,6 +35,15 @@ async def home(current_user = Depends(get_current_user)):
     return 0;
 
 
+@app.get('/api/v1/index/',
+         status_code = 200)
+async def index(offset:int = 0, limit:int = 10):
+    arguments = {
+        'offset':offset,
+        'limit':limit
+    }
+    return arguments;
+
 origins = ["*"]
 
 app.add_middleware(

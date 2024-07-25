@@ -1,12 +1,18 @@
-from typing import List
+from typing import Dict, List;
 from src.core.schemas.task import (
     TaskCreateSchema,
     TaskDetailSchema,
     TaskListSchema,
 );
+from src.core.schemas.mostResponse import MostResponse;
+
 from src.core.service.task.task import get_task_service
 from src.core.service.account.auth import get_current_user;
 from fastapi import APIRouter, Depends, HTTPException, status;
+
+from typing import Annotated;
+from src.pagination import Pagination, pagination_param;
+
 router = APIRouter(prefix = '/task', tags = ['task']);
 
 @router.post('/add/',
@@ -27,15 +33,17 @@ async def add_task(
         );
 
 @router.get('/all/',
-            response_model = List[TaskListSchema],
+            response_model = MostResponse[TaskDetailSchema],
             status_code=status.HTTP_200_OK)
 async def get_all_task(
+        pagination: Annotated[Pagination, Depends(pagination_param)],
         current_user = Depends(get_current_user),
-        task_service = Depends(get_task_service)
+        task_service = Depends(get_task_service),
 ):
     try:
-        tasks = await task_service.get_all_task(current_user);
-        return tasks;
+        result = await task_service.get_all_task(current_user,pagination);
+        return {"results":result.get('task'),'page':pagination.page,'size':pagination.perPage, 'count':result.get('count')};
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
