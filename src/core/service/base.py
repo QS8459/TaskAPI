@@ -3,6 +3,8 @@ from pydantic.types import UUID;
 
 from fastapi import Depends;
 
+from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession;
 from sqlalchemy import delete, Row, func, update;
 from sqlalchemy.exc import SQLAlchemyError;
@@ -63,12 +65,16 @@ class AbstractBaseService(ABC,Generic[T]):
     async def get_and_update(self, id_:UUID,**kwargs) -> T:
         try:
             async with self.session:
-                instance = await self.get_by_id(id_);
+                print(type(kwargs))
+                result = await self.session.execute(
+                    select(self.model).where(self.model.id == id_)
+                )
+                instance = result.scalars().first()
                 for k, v in kwargs.items():
                     setattr(instance, k, v);
-                self.session.add(instance);
+                instance.updated_at = datetime.utcnow();
                 await self.session.commit();
-                await self.session.refresh(instance);
+                # await self.session.refresh(instance)
                 return instance;
         except SQLAlchemyError as e:
             raise e;
@@ -76,11 +82,13 @@ class AbstractBaseService(ABC,Generic[T]):
     async def update(self, id_:UUID, **kwargs) -> T:
         try:
             async with self.session:
-                instance = self.model(**kwargs)
+                instance = await self.get_by_id(id_);
+                print(type(instance));
+                # instance = self.model(**kwargs)
                 update(self.model).where(self.model.id == id_).values(**kwargs);
-                await self.session.commit();
-                await self.session.refresh(instance);
-                return instance;
+                return await self.session.commit();
+                # await self.session.refresh(instance);
+                # return instance;
         except SQLAlchemyError as e:
             raise e;
 
@@ -90,6 +98,7 @@ class AbstractBaseService(ABC,Generic[T]):
                 instance = await self.get_by_id(id_);
                 await self.session.delete(instance);
                 await self.session.commit();
+                return "Success"
         except SQLAlchemyError as e:
             raise e;
 

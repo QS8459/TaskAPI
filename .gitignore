@@ -1,0 +1,8 @@
+.*
+.env
+*__pycache__
+*.pyc
+5000
+alembic
+alembic.ini
+dafj

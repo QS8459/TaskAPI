@@ -10,7 +10,7 @@ from src.core.schemas.account import (
 from fastapi.security import OAuth2PasswordRequestForm;
 from src.core.service.account.account import get_account_service;
 from src.core.service.account.auth import generate_access_token, get_current_active_user, get_current_user;
-from src.core.service.v_code.v_code import v_code_service;
+from src.core.service.profile.profile import get_profile_service;
 router = APIRouter(prefix = "/account", tags = ['account']);
 
 @router.post("/signup/",
@@ -19,11 +19,13 @@ router = APIRouter(prefix = "/account", tags = ['account']);
 async def add_account(
     account_data:AddAccount,
     account_service = Depends(get_account_service),
-    code_service = Depends(v_code_service)
+    profile_service = Depends(get_profile_service)
 ):
     try:
         req = await account_service.add_account(**account_data.dict());
         if req:
+            # print(req.id)
+            await profile_service.create(owner = req.id)
             return req;
         return HTTPException(
             status_code = status.HTTP_400_BAD_REQUEST,
@@ -40,7 +42,6 @@ async def add_account(
              status_code = status.HTTP_200_OK)
 async def verify_account(
         user_id: UUID,
-        code_service = Depends(v_code_service),
         account_service = Depends(get_account_service)
 ):
     try:

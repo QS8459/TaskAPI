@@ -7,7 +7,7 @@ from src.core.service.base import AbstractBaseService;
 from sqlalchemy.future import select;
 from src.db.models.task.task import Task;
 from sqlalchemy.exc import SQLAlchemyError;
-from sqlalchemy import func;
+from sqlalchemy import func, asc, desc;
 
 from src.core.schemas.account import AccountDetail;
 from src.pagination import Pagination, pagination_param
@@ -30,11 +30,11 @@ class TaskService(AbstractBaseService):
                     .offset(
                         pagination.page - 1
                         if pagination.page == 1
-                        else (pagination.page - 1) * pagination.perPage
+                        else     (pagination.page - 1) * pagination.perPage
                     )
                 );
 
-                result = await self.session.execute(query);
+                result = await self.session.execute(query.order_by(asc(self.model.created_at)));
 
                 task = result.scalars().all();
                 count_query = select(func.count()).select_from(self.model).filter(self.model.created_by == user.id)
