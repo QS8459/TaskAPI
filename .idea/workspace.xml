@@ -5,32 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/api/v1/images/images.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/v1/profile/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/v1/profile/profile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/schemas/profile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/images/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/images/images.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/profile/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/service/profile/profile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/images/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/images/images.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/profile/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/models/profile/profile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TaskAPI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TaskAPI.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/v1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/v1/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/account/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/v1/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/task/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/task/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/task/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/v_code/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/images/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/service/v_code/v_code.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/account/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/verification_code/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/verification_code/verification_code.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/n.py" beforeDir="false" afterPath="$PROJECT_DIR$/n.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,15 +35,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/User/Desktop/projects/TaskAPI",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/projects/TaskAPI&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\Desktop\pdfPy\Pdfs" />
@@ -96,15 +73,5 @@
       <updated>1712078358165</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/config.py</url>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
