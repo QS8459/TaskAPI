@@ -1,0 +1,39 @@
+services:
+  taskapi:
+    container_name: task_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TK_POSTGRES_USER: fastapi
+      TK_POSTGRES_PASSWORD: fastapi_admin
+      TK_POSTGRES_DB: taskapi
+      TK_POSTGRES_PORT: 5432
+      TK_POSTGRES_HOST: taskapi_db
+      TK_APP_TITLE: Task_Management
+      TK_APP_DESCRIPTION: Task_Management_APP
+      TK_APP_VERSION: 0.0.1
+    expose:
+      - 7000
+    ports:
+      - "7000:7000"
+    entrypoint: ["hypercorn", "main:app", "--bind", "0.0.0.0:7000"]
+    volumes:
+      - .:/app
+
+  postgres:
+    container_name: taskapi_db
+    build:
+      context: ./postgres_alpine
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: fastapi
+      POSTGRES_DB: taskapi
+      POSTGRES_PASSWORD: fastapi_admin
+      POSTGRES_PORT: 5432
+    volumes:
+      - postgresvolume:/var/lib/postgres/data
+
+volumes:
+  postgresvolume:
+    driver: local

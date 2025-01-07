@@ -1,13 +1,9 @@
 from contextlib import asynccontextmanager
-from typing import Annotated;
 
-from fastapi import FastAPI, Header, Depends;
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import api_router
 from src.config import settings
-
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -37,4 +33,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-init_routers()
+init_routers(app)

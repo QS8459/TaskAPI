@@ -5,15 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/init_session.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postgres_alpine/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postgres_alpine/docker-entrypoint.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/user/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/user/user.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/account/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/account/account.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/auth/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/auth/auth.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/images/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/images/images.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/profile/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/profile/profile.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/task/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/task/task.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/schemas/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/schemas/mostResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/mostResponse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/schemas/profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/profile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/schemas/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/engine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pagination.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ver_email.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ver_email.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

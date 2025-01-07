@@ -1,1 +1,1 @@
-from src.core.service.base import AbstractBaseService;
+from src.core.service.base import BaseService;
