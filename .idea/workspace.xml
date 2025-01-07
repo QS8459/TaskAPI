@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/init_sessoin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/mostResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/mostResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/profile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pagination.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
