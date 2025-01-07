@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # smtp_pass: SecretStr;
 
     class Config:
-        env_file = None,
+        env_file = None
         env_file_encoding = "utf-8"
         extra = Extra.allow
         env_prefix ="TK_"
