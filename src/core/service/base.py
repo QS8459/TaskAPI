@@ -1,129 +1,67 @@
-from typing import Generic, TypeVar, Type, Tuple, Sequence, Any, Annotated;
-from pydantic.types import UUID;
-
-from fastapi import Depends;
-
-from datetime import datetime
-
+from typing import Generic, TypeVar, Type;
 from sqlalchemy.ext.asyncio import AsyncSession;
-from sqlalchemy import delete, Row, func, update;
-from sqlalchemy.exc import SQLAlchemyError;
-from sqlalchemy.future import select;
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError;
+from sqlalchemy.future import select
+from abc import ABC, abstractmethod;
+from uuid import UUID;
+T = TypeVar("T");
 
-from abc import ABC
-
-from src.pagination import pagination_param, Pagination;
-T = TypeVar("T")
-
-class AbstractBaseService(ABC,Generic[T]):
-    def __init__(self, session:AsyncSession, model:Type[T]):
+class BaseService(ABC, Generic[T]):
+    def __init__(self, session: AsyncSession, model:Type[T]):
         self.session = session;
         self.model = model;
 
-    async def create(self, **kwargs) -> T:
+    async def __commit_in_session(self, callable, refresh = True,*args, **kwargs):
         try:
-            async with self.session:
-                instance = self.model(**kwargs);
-                self.session.add(instance);
-                await self.session.commit();
-                await self.session.refresh(instance);
-                return instance;
+            result = await callable(*args,**kwargs)
+            await self.session.commit();
+            if result and refresh:
+                await self.session.refresh();
+            return result;
         except SQLAlchemyError as e:
-            raise e;
+            raise SQLAlchemyError(e);
+        except IntegrityError as e:
+            raise IntegrityError(e);
+        except Exception as e:
+            raise Exception(e);
 
-    async def get_all(
-            self,
-            user,
-            pagination: Annotated[Pagination, Depends(pagination_param)]
-    ):
+    async def __exe_in_session(self, query):
         try:
-            async with self.session:
-                query = (
-                    select(self.model).filter(self.model.created_by == user.id)
-                    .limit(pagination.perPage)
-                    .offset(pagination.page - 1
-                    if pagination.page == 1
-                    else(pagination.page - 1) * pagination.perPage )
-                )
-                result = await self.session.execute(query);
-                return result.scalars().all();
+            result = await self.session.execute(query);
+            return result.scalars().first();
+        except IntegrityError as e:
+            raise IntegrityError(e);
         except SQLAlchemyError as e:
-            raise e;
+            raise SQLAlchemyError(e);
+        except Exception as e:
+            raise Exception(e);
 
-    async def get_by_id(self, _id: UUID) -> T:
-        try:
-            async with self.session:
-                query = select(self.model).where(self.model.id == _id);
-                result = await self.session.execute(query);
-                instance = result.scalars().first();
-                if not instance:
-                    raise ValueError(f"{self.model.__name__} not found")
-                return instance;
-        except SQLAlchemyError as e:
-            raise e
+    @abstractmethod
+    def before_add(self,*args, **kwargs):
+        pass
+    async def add(self, *args, **kwargs) -> T:
+        async def _add(**kwargs):
+            instance = self.model(**kwargs)
+            self.before_add(**kwargs)
+            self.session.add(instance)
+            return instance
+        instance = await self.__commit_in_session(_add, **kwargs)
+        return instance
 
-    async def get_and_update(self, id_:UUID,**kwargs) -> T:
-        try:
-            async with self.session:
-                print(type(kwargs))
-                result = await self.session.execute(
-                    select(self.model).where(self.model.id == id_)
-                )
-                instance = result.scalars().first()
-                for k, v in kwargs.items():
-                    setattr(instance, k, v);
-                instance.updated_at = datetime.utcnow();
-                await self.session.commit();
-                # await self.session.refresh(instance)
-                return instance;
-        except SQLAlchemyError as e:
-            raise e;
+    async def get_by_id(self, id: UUID) -> T:
+        query = select(self.model).where(self.model.id == id)
+        instance = self.__exe_in_session(query)
+        if not instance:
+            return None
+        return instance
 
-    async def update(self, id_:UUID, **kwargs) -> T:
-        try:
-            async with self.session:
-                instance = await self.get_by_id(id_);
-                print(type(instance));
-                # instance = self.model(**kwargs)
-                update(self.model).where(self.model.id == id_).values(**kwargs);
-                return await self.session.commit();
-                # await self.session.refresh(instance);
-                # return instance;
-        except SQLAlchemyError as e:
-            raise e;
+    async def update(self, id: UUID, **kwargs) -> T:
+        async def _update(id:UUID):
+            instance = await self.get_by_id(id);
+            for k,v in kwargs.items():
+                setattr(instance,k,v)
+            self.session.add(instance)
+            return instance
+        instance = await self.__commit_in_session(_update, refresh = False, **kwargs)
 
-    async def delete(self, id_:UUID):
-        try:
-            async with self.session:
-                instance = await self.get_by_id(id_);
-                await self.session.delete(instance);
-                await self.session.commit();
-                return "Success"
-        except SQLAlchemyError as e:
-            raise e;
-
-
-    async def get_all_paginated(
-            self,
-            page: int = 1,
-            page_size: int = 25,
-    )-> Tuple[int, Sequence[Row[Any]]]:
-        try:
-            async with self.session:
-                limit = page_size;
-                offset = (page-1) * page_size;
-                instance = await self.get_all();
-                count = await self.get_count();
-                return count, instance;
-        except SQLAlchemyError as e:
-            raise e;
-
-    async def get_count(self) -> int:
-        try:
-            async with self.session:
-                query = select(func.count()).select_from(self.model)
-                result = await self.session.execute(query);
-                count = result.scalar();
-                return count;
-        except SQLAlchemyError as e:
-            raise e
+        return instance
