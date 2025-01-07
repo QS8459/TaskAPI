@@ -62,6 +62,47 @@ class BaseService(ABC, Generic[T]):
                 setattr(instance,k,v)
             self.session.add(instance)
             return instance
-        instance = await self.__commit_in_session(_update, refresh = False, **kwargs)
+        instance = await self.__commit_in_session(_update, refresh = False, id = id, **kwargs)
 
         return instance
+
+    async def hard_delete(self, id: UUID) -> str:
+        async def _delete(id: UUID):
+            instance = await self.get_by_id(id);
+            await self.session.delete(instance);
+            return instance
+
+        instance = await self.__commit_in_session(_delete, refresh = False, id = id)
+
+    async def filter(self, fields=None, **kwargs):
+        """
+        Filter records with dynamic criteria and select specific columns.
+
+        Args:
+            fields (list): List of fields to retrieve. If None, retrieves all columns.
+                           Example: fields=["id", "name"]
+            kwargs: Key-value pairs for filtering.
+                    Example: filter(name="Alice", age=30)
+
+        Returns:
+            List of filtered results (as dictionaries if fields are specified) or None in case of error.
+        """
+        query = select(self.model)
+
+        if fields:
+            selected_fields = [getattr(self.model, field) for field in fields if hasattr(self.model, field)]
+            if not selected_fields:
+                raise AttributeError("No valid fields specified for selection.")
+            query = select(*selected_fields)
+
+        for field, value in kwargs.items():
+            if hasattr(self.model, field):
+                query = query.where(getattr(self.model, field) == value)
+            else:
+                raise AttributeError(f"Field '{field}' does not exist in model '{self.model.__name__}'.")
+
+        response = await self.__exe_in_session(query)
+
+        if not response:
+            return None
+        return response
