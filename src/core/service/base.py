@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Type;
+from typing import Generic, TypeVar, Type, List, Dict;
 from sqlalchemy.ext.asyncio import AsyncSession;
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError;
 from sqlalchemy.future import select
@@ -12,30 +12,25 @@ class BaseService(ABC, Generic[T]):
         self.model = model;
         self.instance = None
 
-    async def __commit_in_session(self, callable, refresh = True, *args, **kwargs):
+    async def handle_session_error(self, func, *args, **kwargs):
         try:
-            result = await callable(*args,**kwargs)
-            await self.session.commit();
-            if result and refresh:
-                await self.session.refresh(self.instance);
-            return result;
-        except SQLAlchemyError as e:
-            raise SQLAlchemyError(e);
+            return await func(*args, **kwargs)
         except IntegrityError as e:
-            raise IntegrityError(e);
+            raise IntegrityError(f"IntegrityError: {e}")
+        except SQLAlchemyError as e:
+            raise SQLAlchemyError(f"SQLAlchemyError: {e}")
         except Exception as e:
-            raise Exception(e);
+            raise Exception(f"Unexpected error: {e}")
 
-    async def __exe_in_session(self, query):
-        try:
-            result = await self.session.execute(query);
-            return result.scalars().first();
-        except IntegrityError as e:
-            raise IntegrityError(e);
-        except SQLAlchemyError as e:
-            raise SQLAlchemyError(e);
-        except Exception as e:
-            raise Exception(e);
+    async def __commit_in_session(self, callable, refresh=True, *args, **kwargs):
+        return await self.handle_session_error(callable, *args, **kwargs)
+
+    async def __exe_in_session(self, query, fetch_one = True):
+        result = await self.handle_session_error(self.session.execute, query)
+        if fetch_one:
+            return result.scalars().first()
+        else:
+            return result.scalars().all()
 
     @abstractmethod
     def before_add(self,*args, **kwargs):
@@ -58,24 +53,24 @@ class BaseService(ABC, Generic[T]):
 
     async def update(self, id: UUID, **kwargs) -> T:
         async def _update(id:UUID):
-            instance = await self.get_by_id(id);
+            self.instance = await self.get_by_id(id);
             for k,v in kwargs.items():
-                setattr(instance,k,v)
-            self.session.add(instance)
-            return instance
+                setattr(self.instance,k,v)
+            return self.instance
         instance = await self.__commit_in_session(_update, refresh = False, id = id, **kwargs)
 
         return instance
 
     async def hard_delete(self, id: UUID) -> str:
         async def _delete(id: UUID):
-            instance = await self.get_by_id(id);
-            await self.session.delete(instance);
-            return instance
+            self.instance = await self.get_by_id(id);
+            await self.session.delete(self.instance);
+            return self.instance
 
-        instance = await self.__commit_in_session(_delete, refresh = False, id = id)
+        return await self.__commit_in_session(_delete, refresh = False, id = id)
 
-    async def filter(self, fields=None, **kwargs):
+
+    async def filter(self, fields=None, **kwargs) -> List[Dict]:
         """
         Filter records with dynamic criteria and select specific columns.
 
@@ -102,8 +97,8 @@ class BaseService(ABC, Generic[T]):
             else:
                 raise AttributeError(f"Field '{field}' does not exist in model '{self.model.__name__}'.")
 
-        response = await self.__exe_in_session(query)
+        response = await self.__exe_in_session(query, fetch_one=False)
 
-        if not response:
-            return None
-        return response
+        if fields and response:
+            return [dict(zip(fields, row)) for row in response]
+        return response or []
