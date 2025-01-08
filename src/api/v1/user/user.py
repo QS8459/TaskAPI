@@ -9,5 +9,5 @@ async def sing_in(
         data: AccountSchema,
         service = Depends(account_service)
 ):
-    instance = await account_service().add(**data.dict());
+    instance = await service.add(**data.dict());
     return instance

@@ -8,6 +8,7 @@ class Account(AbsModel):
     password: Mapped[str] = mapped_column(nullable = False);
     task: Mapped[List["Task"]] = relationship(back_populates="account", lazy="selectin");
     profile: Mapped['Profile'] = relationship(back_populates='account', lazy = 'selectin')
+
     def set_password(self, password):
         self.password = sha256.using().hash(password);
 

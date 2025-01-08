@@ -10,13 +10,14 @@ class BaseService(ABC, Generic[T]):
     def __init__(self, session: AsyncSession, model:Type[T]):
         self.session = session;
         self.model = model;
+        self.instance = None
 
-    async def __commit_in_session(self, callable, refresh = True,*args, **kwargs):
+    async def __commit_in_session(self, callable, refresh = True, *args, **kwargs):
         try:
             result = await callable(*args,**kwargs)
             await self.session.commit();
             if result and refresh:
-                await self.session.refresh();
+                await self.session.refresh(self.instance);
             return result;
         except SQLAlchemyError as e:
             raise SQLAlchemyError(e);
@@ -41,10 +42,10 @@ class BaseService(ABC, Generic[T]):
         pass
     async def add(self, *args, **kwargs) -> T:
         async def _add(**kwargs):
-            instance = self.model(**kwargs)
+            self.instance = self.model(**kwargs)
             self.before_add(**kwargs)
-            self.session.add(instance)
-            return instance
+            self.session.add(self.instance)
+            return self.instance
         instance = await self.__commit_in_session(_add, **kwargs)
         return instance
 

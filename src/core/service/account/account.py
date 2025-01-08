@@ -10,8 +10,8 @@ class AccountService(BaseService):
         super().__init__(session, Account)
 
     def before_add(self, **kwargs):
-        self.model.password = self.model.set_password(kwargs.get('password'))
-
+        password = kwargs.pop('password')
+        self.instance.set_password(password=password)
 
 
 def account_service(session:AsyncSession = Depends(get_async_session)) -> AccountService:
