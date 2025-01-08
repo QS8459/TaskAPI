@@ -46,7 +46,7 @@ class BaseService(ABC, Generic[T]):
 
     async def get_by_id(self, id: UUID) -> T:
         query = select(self.model).where(self.model.id == id)
-        instance = self.__exe_in_session(query)
+        instance = await self.__exe_in_session(query)
         if not instance:
             return None
         return instance
