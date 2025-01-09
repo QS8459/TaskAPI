@@ -7,6 +7,8 @@
     <list default="true" id="4f81d930-feb4-4c6d-85f6-13210ee45888" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/v1/user/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/user/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/schemas/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/schemas/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/service/account/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/account/account.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/service/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/service/base.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

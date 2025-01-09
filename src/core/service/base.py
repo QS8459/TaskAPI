@@ -10,11 +10,15 @@ class BaseService(ABC, Generic[T]):
     def __init__(self, session: AsyncSession, model:Type[T]):
         self.session = session;
         self.model = model;
-        self.instance = None
 
-    async def handle_session_error(self, func, *args, **kwargs):
+    async def handle_session_error(self, func, refresh = False,*args, **kwargs):
         try:
-            return await func(*args, **kwargs)
+            instance = await func(*args, **kwargs)
+            await self.session.commit()
+            if refresh:
+                await self.session.refresh(instance)
+                return instance
+            return instance
         except IntegrityError as e:
             raise IntegrityError(f"IntegrityError: {e}")
         except SQLAlchemyError as e:
@@ -23,49 +27,49 @@ class BaseService(ABC, Generic[T]):
             raise Exception(f"Unexpected error: {e}")
 
     async def __commit_in_session(self, callable, refresh=True, *args, **kwargs):
-        return await self.handle_session_error(callable, *args, **kwargs)
+        return await self.handle_session_error(callable, refresh, *args, **kwargs)
 
-    async def __exe_in_session(self, query, fetch_one = True):
-        result = await self.handle_session_error(self.session.execute, query)
+    async def _exe_in_session(self, query, fetch_one = True):
+        result = await self.session.execute(query)
         if fetch_one:
             return result.scalars().first()
         else:
             return result.scalars().all()
 
     @abstractmethod
-    def before_add(self,*args, **kwargs):
+    async def before_add(self,instance=None, *args, **kwargs):
         pass
     async def add(self, *args, **kwargs) -> T:
         async def _add(**kwargs):
-            self.instance = self.model(**kwargs)
-            self.before_add(**kwargs)
-            self.session.add(self.instance)
-            return self.instance
+            instance = self.model(**kwargs)
+            await self.before_add(instance, **kwargs)
+            self.session.add(instance)
+            return instance
         instance = await self.__commit_in_session(_add, **kwargs)
         return instance
 
     async def get_by_id(self, id: UUID) -> T:
         query = select(self.model).where(self.model.id == id)
-        instance = await self.__exe_in_session(query)
+        instance = await self._exe_in_session(query)
         if not instance:
             return None
         return instance
 
     async def update(self, id: UUID, **kwargs) -> T:
         async def _update(id:UUID):
-            self.instance = await self.get_by_id(id);
+            instance = await self.get_by_id(id);
             for k,v in kwargs.items():
-                setattr(self.instance,k,v)
-            return self.instance
+                setattr(instance,k,v)
+            return instance
         instance = await self.__commit_in_session(_update, refresh = False, id = id, **kwargs)
 
         return instance
 
     async def hard_delete(self, id: UUID) -> str:
         async def _delete(id: UUID):
-            self.instance = await self.get_by_id(id);
-            await self.session.delete(self.instance);
-            return self.instance
+            instance = await self.get_by_id(id);
+            await self.session.delete(instance);
+            return instance
 
         return await self.__commit_in_session(_delete, refresh = False, id = id)
 
@@ -97,7 +101,7 @@ class BaseService(ABC, Generic[T]):
             else:
                 raise AttributeError(f"Field '{field}' does not exist in model '{self.model.__name__}'.")
 
-        response = await self.__exe_in_session(query, fetch_one=False)
+        response = await self._exe_in_session(query, fetch_one=False)
 
         if fields and response:
             return [dict(zip(fields, row)) for row in response]
