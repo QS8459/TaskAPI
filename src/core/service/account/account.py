@@ -21,10 +21,13 @@ class AccountService(BaseService):
 
 
     async def get_by_email(self, email):
-        query = select(self.model).where(self.model.email == email)
-        instance = await self._exe_in_session(query, fetch_one= True)
-        return instance
-
+        async def _get_by_email(email = email):
+            query = select(self.model).where(self.model.email == email)
+            return await self.session.execute(query)
+        instance = await self._exe_in_session(_get_by_email, email = email)
+        if instance:
+            return instance
+        return None
 
 def account_service(session: AsyncSession = Depends(get_async_session)) -> AccountService:
     return AccountService(session);

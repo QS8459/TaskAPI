@@ -29,8 +29,8 @@ class BaseService(ABC, Generic[T]):
     async def __commit_in_session(self, callable, refresh=True, *args, **kwargs):
         return await self.handle_session_error(callable, refresh, *args, **kwargs)
 
-    async def _exe_in_session(self, query, fetch_one = True):
-        result = await self.session.execute(query)
+    async def _exe_in_session(self, callable, fetch_one = True, **kwargs):
+        result = await self.handle_session_error(callable, **kwargs)
         if fetch_one:
             return result.scalars().first()
         else:
@@ -49,8 +49,10 @@ class BaseService(ABC, Generic[T]):
         return instance
 
     async def get_by_id(self, id: UUID) -> T:
-        query = select(self.model).where(self.model.id == id)
-        instance = await self._exe_in_session(query)
+        async def _get_by_id(id:UUID):
+            query = select(self.model).where(self.model.id == id)
+            return await self.session.execute(query)
+        instance = await self._exe_in_session(_get_by_id, id = id)
         if not instance:
             return None
         return instance
