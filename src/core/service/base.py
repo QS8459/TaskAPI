@@ -10,6 +10,7 @@ class BaseService(ABC, Generic[T]):
     def __init__(self, session: AsyncSession, model:Type[T]):
         self.session = session;
         self.model = model;
+        self.instance = None
 
     async def handle_session_error(self, func, refresh = False,*args, **kwargs):
         try:
@@ -41,10 +42,10 @@ class BaseService(ABC, Generic[T]):
         pass
     async def add(self, *args, **kwargs) -> T:
         async def _add(**kwargs):
-            instance = self.model(**kwargs)
-            await self.before_add(instance, **kwargs)
+            self.instance = self.model(**kwargs)
+            await self.before_add(self.instance, **kwargs)
             self.session.add(instance)
-            return instance
+            return self.instance
         instance = await self.__commit_in_session(_add, **kwargs)
         return instance
 
@@ -59,7 +60,7 @@ class BaseService(ABC, Generic[T]):
 
     async def update(self, id: UUID, **kwargs) -> T:
         async def _update(id:UUID):
-            instance = await self.get_by_id(id);
+            self.instance = await self.get_by_id(id);
             for k,v in kwargs.items():
                 setattr(instance,k,v)
             return instance
@@ -69,9 +70,9 @@ class BaseService(ABC, Generic[T]):
 
     async def hard_delete(self, id: UUID) -> str:
         async def _delete(id: UUID):
-            instance = await self.get_by_id(id);
-            await self.session.delete(instance);
-            return instance
+            self.instance = await self.get_by_id(id);
+            await self.session.delete(self.instance);
+            return self.instance
 
         return await self.__commit_in_session(_delete, refresh = False, id = id)
 
