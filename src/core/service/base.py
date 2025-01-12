@@ -1,18 +1,19 @@
-from typing import Generic, TypeVar, Type, List, Dict;
-from sqlalchemy.ext.asyncio import AsyncSession;
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError;
+from typing import Generic, TypeVar, Type, List, Dict, Union
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.future import select
-from abc import ABC, abstractmethod;
-from uuid import UUID;
-T = TypeVar("T");
+from abc import ABC, abstractmethod
+from uuid import UUID
+T = TypeVar("T")
+
 
 class BaseService(ABC, Generic[T]):
     def __init__(self, session: AsyncSession, model:Type[T]):
-        self.session = session;
-        self.model = model;
+        self.session = session
+        self.model = model
         self.instance = None
 
-    async def handle_session_error(self, func, refresh = False,*args, **kwargs):
+    async def handle_session_error(self, func, refresh = False,*args, **kwargs) -> T:
         try:
             instance = await func(*args, **kwargs)
             await self.session.commit()
@@ -27,11 +28,11 @@ class BaseService(ABC, Generic[T]):
         except Exception as e:
             raise Exception(f"Unexpected error: {e}")
 
-    async def __commit_in_session(self, callable, refresh=True, *args, **kwargs):
-        return await self.handle_session_error(callable, refresh, *args, **kwargs)
+    async def __commit_in_session(self, call_next, refresh=True, *args, **kwargs) -> T:
+        return await self.handle_session_error(call_next, refresh, *args, **kwargs)
 
-    async def _exe_in_session(self, callable, fetch_one = True, **kwargs):
-        result = await self.handle_session_error(callable, **kwargs)
+    async def _exe_in_session(self, call_next, fetch_one = True, **kwargs) -> T :
+        result = await self.handle_session_error(call_next, **kwargs)
         if fetch_one:
             return result.scalars().first()
         else:
@@ -40,10 +41,11 @@ class BaseService(ABC, Generic[T]):
     @abstractmethod
     async def before_add(self, *args, **kwargs):
         pass
+
     async def add(self, *args, **kwargs) -> T:
-        async def _add(**kwargs):
-            self.instance = self.model(**kwargs)
-            await self.before_add(**kwargs)
+        async def _add(**kwargs_inner):
+            self.instance = self.model(**kwargs_inner)
+            await self.before_add(**kwargs_inner)
             self.session.add(self.instance)
             return self.instance
         instance = await self.__commit_in_session(_add, **kwargs)
@@ -59,25 +61,24 @@ class BaseService(ABC, Generic[T]):
         return instance
 
     async def update(self, id: UUID, **kwargs) -> T:
-        async def _update(id:UUID):
-            self.instance = await self.get_by_id(id);
+        async def _update(inner_id: UUID):
+            self.instance = await self.get_by_id(inner_id)
             for k,v in kwargs.items():
-                setattr(instance,k,v)
+                setattr(instance, k, v)
             return instance
-        instance = await self.__commit_in_session(_update, refresh = False, id = id, **kwargs)
+        instance = await self.__commit_in_session(_update, refresh=False, id=id, **kwargs)
 
         return instance
 
     async def hard_delete(self, id: UUID) -> str:
         async def _delete(id: UUID):
-            self.instance = await self.get_by_id(id);
-            await self.session.delete(self.instance);
+            self.instance = await self.get_by_id(id)
+            await self.session.delete(self.instance)
             return self.instance
 
         return await self.__commit_in_session(_delete, refresh = False, id = id)
 
-
-    async def filter(self, fields=None, **kwargs) -> List[Dict]:
+    async def filter(self, fields=None, **kwargs) -> Union[List[Dict], List]:
         """
         Filter records with dynamic criteria and select specific columns.
 

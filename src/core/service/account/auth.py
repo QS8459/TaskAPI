@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from abc import ABC
 
-request_form = OAuth2PasswordBearer(tokenUrl = '/user/login/', scheme_name = 'jwt')
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl = '/api/v1/user/login/', scheme_name = 'jwt')
 
 
 class JWTHasher(ABC):

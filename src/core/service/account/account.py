@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from src.db.models import Account;
 from src.db.engine import get_async_session
 from src.core.service.base import BaseService;
-from src.core.service.account.auth import JWTHasher, request_form, jwt
+from src.core.service.account.auth import JWTHasher, reuseable_oauth, jwt
 from src.core.schemas.account import AccountResponseSchema
 from src.core.schemas.token import TokenSchemaBase
 
@@ -20,7 +20,7 @@ class AccountService(BaseService, JWTHasher):
     def __init__(self, session:AsyncSession):
         super().__init__(session, Account)
 
-    async def before_add(self, **kwargs):
+    async def before_add(self, **kwargs) -> Union[int, None]:
         email = await self.get_by_email(email = kwargs.get('email'))
         if not email:
             password = kwargs.pop('password')
@@ -28,7 +28,7 @@ class AccountService(BaseService, JWTHasher):
             return 0
         raise ValueError("Email Already Exists")
 
-    async def get_by_email(self, email):
+    async def get_by_email(self, email) -> Union[Account, None]:
         async def _get_by_email(email = email):
             query = select(self.model).where(self.model.email == email)
             return await self.session.execute(query)
@@ -37,7 +37,7 @@ class AccountService(BaseService, JWTHasher):
             return instance
         return None
 
-    async def auth_user(self, email, password):
+    async def auth_user(self, email, password) ->Union[TokenSchemaBase, HTTPException] :
         instance = await self.get_by_email(email)
         if instance:
             verification = instance.verify_password(password)
@@ -52,7 +52,8 @@ class AccountService(BaseService, JWTHasher):
             detail = "Wrong login or password",
         )
 
-    async def get_current_user(self, token: str = Depends(request_form)):
+    async def get_current_user(self, token: str = Depends(reuseable_oauth)) -> Union[AccountResponseSchema, HTTPException]:
+
         try:
             payload = jwt.decode(
                 token, '123', algorithms = ['HS256']
