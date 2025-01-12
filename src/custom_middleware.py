@@ -6,7 +6,6 @@ from src.logger import log
 
 async def logger(request: Request, call_next):
     try:
-        log.info(call_next.__name__)
         response = await call_next(request)
     except (HTTPException, ValueError, Exception) as e:
         log.error(f"EXCEPTION HAPPENED PLEASE CHECK here is error message {e}")
