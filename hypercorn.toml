@@ -1,0 +1,7 @@
+# Hypercorn Configuration
+
+[server]
+bind = ["0.0.0.0:7000"]
+workers = 4
+keep_alive_timeout = 10
+graceful_timeout = 30

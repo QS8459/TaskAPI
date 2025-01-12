@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
     environment:
       TK_POSTGRES_USER: fastapi
       TK_POSTGRES_PASSWORD: fastapi_admin
@@ -17,9 +20,11 @@ services:
       - 7000
     ports:
       - "7000:7000"
-    entrypoint: ["hypercorn", "main:app", "--bind", "0.0.0.0:7000"]
+    entrypoint: ["hypercorn", "--reload", "-c", "/app/hypercorn.toml", "main:app"]
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./requirements.txt:/app/requirements.txt
+      - ./main.py:/app/main.py
 
   postgres:
     container_name: taskapi_db

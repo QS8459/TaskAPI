@@ -1,0 +1,15 @@
+#THIS FILE I NEED IN CASE
+
+[Unit]
+Description=FastAPI Hypercorn App
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/hypercorn -c /app/hypercorn.toml src.main:app
+Restart=always
+User=root
+WorkingDirectory=/app
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
