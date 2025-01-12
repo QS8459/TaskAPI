@@ -20,11 +20,11 @@ class AccountService(BaseService, JWTHasher):
     def __init__(self, session:AsyncSession):
         super().__init__(session, Account)
 
-    async def before_add(self, instance=None, **kwargs):
+    async def before_add(self, **kwargs):
         email = await self.get_by_email(email = kwargs.get('email'))
         if not email:
             password = kwargs.pop('password')
-            instance.set_password(password=password)
+            self.instance.set_password(password=password)
             return 0
         raise ValueError("Email Already Exists")
 

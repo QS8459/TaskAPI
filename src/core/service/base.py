@@ -38,13 +38,13 @@ class BaseService(ABC, Generic[T]):
             return result.scalars().all()
 
     @abstractmethod
-    async def before_add(self,instance=None, *args, **kwargs):
+    async def before_add(self, *args, **kwargs):
         pass
     async def add(self, *args, **kwargs) -> T:
         async def _add(**kwargs):
             self.instance = self.model(**kwargs)
-            await self.before_add(self.instance, **kwargs)
-            self.session.add(instance)
+            await self.before_add(**kwargs)
+            self.session.add(self.instance)
             return self.instance
         instance = await self.__commit_in_session(_add, **kwargs)
         return instance
