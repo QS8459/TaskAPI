@@ -25,6 +25,7 @@ services:
       - ./src:/app/src
       - ./requirements.txt:/app/requirements.txt
       - ./main.py:/app/main.py
+      - ./hypercorn.toml:/app/hypercorn.toml
 
   postgres:
     container_name: taskapi_db

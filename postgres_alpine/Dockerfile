@@ -7,11 +7,11 @@ RUN apk --no-cache update sudo bash && \
     rm -rf /var/cache/apk/* && \
     mkdir /docker-entrypoint-initdb.d
 
-RUN addgroup -S bookstore && adduser bookstore -S -G bookstore bookstore
+RUN addgroup -S taskapi && adduser taskapi -S -G taskapi taskapi
 
-RUN echo "bookstore:admin" |chpasswd
+RUN echo "taskapi:admin" |chpasswd
 
-RUN echo "bookstore ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN echo "taskapi ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ENV LANG en_GB.utf8
 ENV PGDATA /var/lib/postgresql/data
@@ -31,6 +31,6 @@ RUN chmod -R 755 /docker-entrypoint.sh && \
 
 # USER postgres
 
-WORKDIR /home/bookstore
+WORKDIR /home/taskapi
 
 CMD ["postgres"]

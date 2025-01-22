@@ -3,6 +3,8 @@ FROM python:3.11-alpine
 WORKDIR /app
 
 COPY . .
+COPY hypercorn.toml /app/hypercorn.toml
+RUN chmod 644 /app/hypercorn.toml
 
 RUN pip install -r requirements.txt
 
@@ -19,5 +21,5 @@ ENV TK_PG_URI=postgresql+asyncpg://${TK_POSTGRES_USER}:${TK_POSTGRES_PASSWORD}@$
 
 EXPOSE 7000
 
-
+# CMD ["hypercorn", "-c", "/app/hypercorn.toml", "main:app"]
 
