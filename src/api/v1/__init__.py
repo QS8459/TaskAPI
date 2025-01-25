@@ -4,5 +4,5 @@ from fastapi import APIRouter
 
 api = APIRouter(prefix="/v1")
 
-api.include_router(user_api)
-api.include_router(task_api)
+api.include_router(user_api, tags=["user"])
+api.include_router(task_api, tags=["task"])

@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, create_model as create_pydantic_model
 from uuid import UUID
-from typing_extensions import Annotated, Doc
+from typing_extensions import Annotated, Doc, List
 from fastapi.param_functions import Form
 from enum import Enum
 
@@ -45,3 +45,17 @@ class TaskBaseSchema(BaseModel):
 
 class TaskResponseModel(TaskBaseSchema):
     id: UUID
+
+
+class TaskListModelReponse(BaseModel):
+
+    def __new__(cls, data_model=None):
+        if hasattr(data_model, __name__):
+            data_model_name = data_model.__name__
+        else:
+            data_model_name = "???"
+        return create_pydantic_model(
+            data_model_name + "ListResponse",
+            data=(List[data_model], ...),
+            __base__=BaseModel,
+        )

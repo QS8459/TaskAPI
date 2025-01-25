@@ -3,6 +3,6 @@ workers = 4
 worker_class = "uvloop"
 keep_alive_timeout = 10
 graceful_timeout = 30
-log_level = "-"
+#log_level = "-"
 accesslog = "-"
 errorlog = "-"

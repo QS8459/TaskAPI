@@ -1,7 +1,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends
 
-from src.core.service.account.account import account_service
+from src.core.service.account.account import account_service, get_current_account
 from src.core.schemas.account import (
     AccountSignInSchema,
     CustomAuthForm,
@@ -9,7 +9,7 @@ from src.core.schemas.account import (
 )
 from src.core.schemas.token import TokenSchemaBase
 
-user_api = APIRouter(prefix="/user")
+user_api = APIRouter(prefix="/user", tags=["user"])
 
 
 @user_api.post("/sign_in/")
@@ -24,12 +24,6 @@ async def get_user(id: UUID, service=Depends(account_service)):
     return instance
 
 
-@user_api.get("/{email}/")
-async def get_user_by_email(email: str, service=Depends(account_service)):
-    instance = await service.get_by_email(email)
-    return instance
-
-
 @user_api.post("/login/", response_model=TokenSchemaBase)
 async def login(
     form_data: CustomAuthForm = Depends(), service=Depends(account_service)
@@ -39,5 +33,5 @@ async def login(
 
 
 @user_api.get("/me/", response_model=AccountResponseSchema)
-async def me(user: AccountSignInSchema = Depends(account_service().get_current_user)):
+async def me(user: AccountSignInSchema = Depends(get_current_account)):
     return user
