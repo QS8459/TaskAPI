@@ -5,14 +5,13 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from typing_extensions import Union, Any
+from typing_extensions import Union
 from pydantic import ValidationError
 
 from src.db.models import Account
 from src.db.engine import get_async_session
 from src.core.service.base import BaseService
 from src.core.service.account.auth import JWTHasher, reuseable_oauth, jwt
-from src.core.schemas.account import AccountResponseSchema
 from src.core.schemas.token import TokenSchemaBase
 
 
@@ -58,38 +57,31 @@ class AccountService(BaseService, JWTHasher):
             detail="Wrong login or password",
         )
 
-    async def get_current_user(
-        self, token: str = Depends(reuseable_oauth)
-    ) -> Union[AccountResponseSchema, HTTPException]:
-
-        try:
-            payload = jwt.decode(token, "123", algorithms=["HS256"])
-            if datetime.fromtimestamp(payload.get("exp") < datetime.now()):
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Token expired",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-        except (jwt.PyJWTError, ValidationError):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Token Expired",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        user: Union[dict[str, Any], None] = await self.get_by_email(
-            email=payload.get("email")
-        )
-
-        if user:
-            return AccountResponseSchema(**user)
-        return HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Couldn't Validate Credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
 
 def account_service(
     session: AsyncSession = Depends(get_async_session),
 ) -> AccountService:
     return AccountService(session)
+
+
+async def get_current_account(
+    token: str = Depends(reuseable_oauth), service=Depends(account_service)
+):
+    try:
+
+        payload = jwt.decode(token, "123", algorithms=["HS256"])
+        if datetime.fromtimestamp(payload.get("exp")) < datetime.utcnow():
+            raise HTTPException(
+                detail="Authorization Error",
+                status_code=status.HTTP_401_FORBIDDNE,
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except (jwt.PyJWTError, ValidationError):
+        raise HTTPException(
+            detail="Authorization Error",
+            status_code=status.HTTP_403_FORBIDDNE,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    user = await service.get_by_email(payload.get("sub"))
+
+    return user

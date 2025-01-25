@@ -10,6 +10,9 @@ class TaskService(BaseService):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Task)
 
+    async def before_add(self, *args, **kwargs):
+        pass
+
 
 def get_task_service(session: AsyncSession = Depends(get_async_session)) -> TaskService:
     return TaskService(session)
